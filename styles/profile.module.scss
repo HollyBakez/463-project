@@ -2,5 +2,16 @@
     margin: auto;
     width: 60%;
     padding: 10px;
-    
+    border: 1px, green;
+}
+
+.header {
+    padding: 20px;
+}
+
+.avatar {
+    vertical-align: middle;
+    width: 50px;
+    height: 100px;
+    border-radius: 50%;
 }

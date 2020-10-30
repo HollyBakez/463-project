@@ -15,48 +15,62 @@ export default function RoomStayList() {
     return (
         <Layout>
         <div className={styles.mainTableWrapper}> 
-        <table className={styles.mainTable}>
-            <tr>
-                <th> <h1> Room # </h1> </th>
-                <th> <h1> Monday </h1> </th>
-                <th> <h1> Tuesday </h1></th>
-                <th> <h1> Wednesday </h1></th>
-                <th> <h1>Thursday </h1></th>
-                <th> <h1>Friday</h1></th>
-                <th> <h1>Saturday</h1></th>
-                <th> <h1>Sunday</h1></th>
-            </tr> 
-            <tr>
-                <th> 
-                    <span> 101 </span>
-                </th>
-                <th> 
-                    <span> Brian Chung</span>
-                </th>
-                <th> </th>
-                <th> 
-                    <span> Hollando Hoo</span>
-                </th>
-                <th> </th>
-                <th></th>
-                <th> 
-                    <span>Jason Jose</span>
-                </th>
-                <th></th>
-            </tr> 
-            <tr>
-                <th>
-                    <span> 420 </span>
-                </th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th> Ben Dover </th>
-                <th> Mike Hunt</th>
-            </tr> 
-        </table>
+            <table className={styles.mainTable}>
+                <tr>
+                    <th> <h1> Room # </h1> </th>
+                    <th> <h1> Monday </h1> </th>
+                    <th> <h1> Tuesday </h1></th>
+                    <th> <h1> Wednesday </h1></th>
+                    <th> <h1> Thursday </h1></th>
+                    <th> <h1> Friday</h1></th>
+                    <th> <h1> Saturday</h1></th>
+                    <th> <h1> Sunday</h1></th>
+                </tr> 
+                <tr>
+                    <th> 
+                        <span> 101 </span>
+                    </th>
+                    <th>           
+                        <Link href="/profile">
+                            Brian Chung
+                        </Link>
+                    </th>
+                    <th> </th>
+                    <th> 
+                        <Link href="/profile"> 
+                            Hollando Hoo
+                        </Link>
+                    </th>
+                    <th> </th>
+                    <th></th>
+                    <th>
+                        <Link href="/profile">
+                            Jason Jose
+                        </Link>
+                    </th>
+                    <th></th>
+                </tr> 
+                <tr>
+                    <th>
+                        <span> 420 </span>
+                    </th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th> 
+                        <Link href="/profile"> 
+                            Ben Dover 
+                        </Link>
+                    </th>
+                    <th> 
+                        <Link href="/profile">
+                            Mike Hunt
+                        </Link>
+                    </th>
+                </tr> 
+            </table>
         </div>
         </Layout>
     );
