@@ -1,0 +1,25 @@
+.roomBlock {
+    height: 140px;
+    width: 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden;
+}
+
+.roomNum {
+    padding: 6px;
+    font-size: 16px;
+}
+
+.roomType {
+    font-size: 36px;
+    font-weight: 700;
+    text-align: center;
+}
+
+.roomStatus {
+    padding: 6px;
+    font-size: 12px;
+    text-align: right;
+}

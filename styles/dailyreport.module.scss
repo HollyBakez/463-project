@@ -1,0 +1,37 @@
+.mainTable {
+    th {
+        padding: 10px;
+    }
+}
+
+.mainTableWrapper {
+    display: flex;
+    justify-content: center;
+}
+
+
+.center {
+    margin: auto;
+    width: 70%;
+    padding: 0.5em;
+    
+}
+
+.centertext {
+    padding: 0.5em;
+    margin: auto;
+    width: 70%;
+    float: inherit;
+}
+
+
+.header {
+    padding: 0.5em;
+    margin: auto;
+    width: 70%;
+}
+
+
+.fields {
+    display: inline-block;
+}
