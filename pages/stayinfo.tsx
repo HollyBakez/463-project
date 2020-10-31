@@ -1,31 +1,35 @@
 import React from 'react';
 import Layout from '../src/Layout';
 import styles from "../styles/profile.module.scss";
+import Card from '@material-ui/core/Card';
 
-
-export default function Profile() {
+export default function StayInfo() {
     return(
         <Layout>
         
                 <div className={styles.header}>
-                    <h1> Profile Page</h1>
-                </div>
-                
-                <div className={styles.center}>
+                    <h1>Stay Info</h1>
+                </div >
+                <div style={{display: "flex", justifyContent: "center"}}>
+                <Card style={{width:700 }}>
                     <div className={styles.avatar}>
                         <img src="/assets/avatar.png" alt="Leo"/>
                     </div>
                     <div className={styles.centertext}>
-                        <h3>First Name: <div className={styles.fields}>Leonardo</div></h3> 
-                        <h3>Last Name: <div className={styles.fields}>Di Cap-io</div></h3>
-                        <h3>Address: <div className={styles.fields}>235 Middle Neck Rd.</div></h3>
-                        <h3>E-Mail: <div className={styles.fields}>realjaygatsby@hotmail.com</div></h3>
-                        <h3>Phone: <div className={styles.fields}>(626)-123-4444</div></h3>
-                        <h3>ID Info: <div className={styles.fields}>CA, L1234562</div></h3>
-                        <h3>Vehicle License Plate: <div className={styles.fields}>7TYP290</div></h3>
+                        <h1>Guest Name: <div className={styles.fields}>Leonardo Di Cap-io</div></h1> 
+                        <h3>Check-In Date: <div className={styles.fields}>10/31/20</div></h3>
+                        <h3>Check-In Time: <div className={styles.fields}>9:00 AM</div></h3>
+                        <h3>Expected Check-Out Date: <div className={styles.fields}>11/05/20</div></h3>
+                        <h3>Expected Check-Out Time: <div className={styles.fields}>11:00 AM</div></h3>
+                        <h3>Room Type: <div className={styles.fields}>DQ</div></h3>
+                        <h3>Room Number: <div className={styles.fields}>101</div></h3>
+                        <h3>Room Rate ($/Day): <div className={styles.fields}>$50.00</div></h3>
+                        <h3>Total Charge: <div className={styles.fields}>$250.00</div></h3>
+                        <h3>Payments Made: <div className={styles.fields}>$100.00</div></h3>
+                        <h3>Balance: <div className={styles.fields}>$150.00</div></h3>
                     </div>
-                </div>
-     
+                </Card>
+        </div>
         </Layout>
     );
 
