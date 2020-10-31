@@ -28,6 +28,7 @@ export default function RoomStayList() {
 
     return (
         <Layout>
+        <h1 className={styles.header}> Room Stay List </h1>
         <Grid container justify="center" spacing={4}>
             {
               rooms.map((value) => (
