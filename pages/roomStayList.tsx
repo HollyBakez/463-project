@@ -2,76 +2,43 @@ import React from 'react';
 import ProTip from '../src/ProTip';
 import Link from '../src/Link';
 import Copyright from '../src/Copyright';
-// Layout 
+// Layout
 import Layout from '../src/Layout';
+
 // Material UI Shtuff
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
-import styles from "../styles/roomStayList.module.scss";
+import Grid from '@material-ui/core/Grid';
 
+import styles from "../styles/roomStayList.module.scss";
+import DayColumn from "../src/components/DayColumn";
 export default function RoomStayList() {
+
+  const rooms = [
+    {date:"October 30", roomOccupyList:[{roomNum:101, guestName:"Bob Sanchez"},{roomNum:102, guestName:"Clarisee Patiss"}]},
+    {date:"October 31", roomOccupyList:[{roomNum:101, guestName:"Paul Snowfalke"},{roomNum:102, guestName:"John Govena"}]},
+    {date:"October 32", roomOccupyList:[{roomNum:101, guestName:"Chrono Statsis"},{roomNum:102, guestName:"Prep Lasagner"}]},
+    {date:"October 33", roomOccupyList:[{roomNum:101, guestName:"Tron Tronner"},{roomNum:102, guestName:"Fizz Gazoochi"}]},
+    {date:"October 34", roomOccupyList:[{roomNum:101, guestName:""},{roomNum:102, guestName:"Shawn Leboo"}]},
+    {date:"October 35", roomOccupyList:[{roomNum:101, guestName:"Blotis Mitus"},{roomNum:102, guestName:"Welter Belcher"}]},
+    {date:"October 36", roomOccupyList:[{roomNum:101, guestName:"Galactic Gooer"},{roomNum:102, guestName:"Goofy Goober"}]},
+  ]
+
     return (
         <Layout>
-        <div className={styles.mainTableWrapper}> 
-            <table className={styles.mainTable}>
-                <tr>
-                    <th> <h1> Room # </h1> </th>
-                    <th> <h1> Monday </h1> </th>
-                    <th> <h1> Tuesday </h1></th>
-                    <th> <h1> Wednesday </h1></th>
-                    <th> <h1> Thursday </h1></th>
-                    <th> <h1> Friday</h1></th>
-                    <th> <h1> Saturday</h1></th>
-                    <th> <h1> Sunday</h1></th>
-                </tr> 
-                <tr>
-                    <th> 
-                        <span> 101 </span>
-                    </th>
-                    <th>           
-                        <Link href="/profile">
-                            Brian Chung
-                        </Link>
-                    </th>
-                    <th> </th>
-                    <th> 
-                        <Link href="/profile"> 
-                            Hollando Hoo
-                        </Link>
-                    </th>
-                    <th> </th>
-                    <th></th>
-                    <th>
-                        <Link href="/profile">
-                            Jason Jose
-                        </Link>
-                    </th>
-                    <th></th>
-                </tr> 
-                <tr>
-                    <th>
-                        <span> 420 </span>
-                    </th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th> 
-                        <Link href="/profile"> 
-                            Ben Dover 
-                        </Link>
-                    </th>
-                    <th> 
-                        <Link href="/profile">
-                            Mike Hunt
-                        </Link>
-                    </th>
-                </tr> 
-            </table>
-        </div>
+        <Grid container justify="center" spacing={4}>
+            {
+              rooms.map((value) => (
+                <Grid item>
+                  <DayColumn date={value.date} roomOccupyList={value.roomOccupyList}>
+                  </DayColumn>
+                </Grid>
+              ))
+            }
+        </Grid>
+
         </Layout>
     );
 }

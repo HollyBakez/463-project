@@ -1,10 +1,16 @@
-.mainTable {
-    th {
-        padding: 10px
-    }
+.columns {
+  display:flex;
+  flex-direction: column;
+  text-align: center
 }
 
-.mainTableWrapper {
-    display: flex;
-    justify-content: center;
+.columnContent {
+  display:flex;
+  flex-direction: column;
+}
+
+.grid {
+  display: flex;
+  flex-direction: row;
+  
 }

@@ -1,0 +1,22 @@
+.mainTable {
+    th {
+      padding: 20px;
+    }
+    td {
+      padding-bottom: 15px;
+    }
+}
+
+.mainTableWrapper {
+    display: flex;
+    justify-content: center;
+}
+
+.header {
+  display:flex;
+  justify-content:center;
+}
+
+.tableContent {
+  text-align: center;
+}
