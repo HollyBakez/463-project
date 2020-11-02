@@ -33,7 +33,8 @@ export default function RoomStayList() {
             {
               rooms.map((value) => (
                 <Grid item>
-                  <DayColumn date={value.date} roomOccupyList={value.roomOccupyList}>
+                  <DayColumn roomOccupyList={value.roomOccupyList}>
+                    {value.date} 
                   </DayColumn>
                 </Grid>
               ))

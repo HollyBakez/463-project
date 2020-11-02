@@ -1,14 +1,5 @@
 import React from 'react';
-import ProTip from '../src/ProTip';
-import Link from '../src/Link';
-import Copyright from '../src/Copyright';
-// Layout
 import Layout from '../src/Layout';
-// Material UI Shtuff
-import Container from '@material-ui/core/Container';
-import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
-import Button from '@material-ui/core/Button';
 import styles from "../styles/housekeeping.module.scss";
 
 export default function RoomStayList() {
@@ -29,7 +20,7 @@ export default function RoomStayList() {
                     <th> <h1> Dusting</h1></th>
                     <th> <h1> Electronics</h1></th>
                 </tr>
-                <tr class={styles.tableContent}>
+                <tr className={styles.tableContent}>
                     <td> <span> 101 </span> </td>
                     <td> <span> Bob Sanchez </span> </td>
                     <td> <span> K </span> </td>
@@ -41,7 +32,7 @@ export default function RoomStayList() {
                     <td> <span> Done </span> </td>
                     <td> <span> Clean</span> </td>
                 </tr>
-                <tr class={styles.tableContent}>
+                <tr className={styles.tableContent}>
                     <td> <span> 102 </span> </td>
                     <td> <span> Don Cappucino </span> </td>
                     <td> <span> DQ </span> </td>
@@ -53,7 +44,7 @@ export default function RoomStayList() {
                     <td> <span> Not Done </span> </td>
                     <td> <span> Dirty </span> </td>
                 </tr>
-                <tr class={styles.tableContent}>
+                <tr className={styles.tableContent}>
                     <td> <span> 103 </span> </td>
                     <td> <span> B chung </span> </td>
                     <td> <span> DQK </span> </td>
@@ -65,7 +56,7 @@ export default function RoomStayList() {
                     <td> <span> Not Done </span> </td>
                     <td> <span> Dirty </span> </td>
                 </tr>
-                <tr class={styles.tableContent}>
+                <tr className={styles.tableContent}>
                     <td> <span> 104 </span> </td>
                     <td> <span> Al Capone </span> </td>
                     <td> <span> S </span> </td>
