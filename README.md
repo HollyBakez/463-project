@@ -19,7 +19,7 @@ Now our web application should be running (by default) on localhost:3000.
 
 To access each of the capabilities, you must open these page urls:
 
-## Capability 1: ```localhost:3000/roomstatus ```
+## Capability 1: ```localhost:3000/roomStatus ```
 * Done by: Brian Chung
 ## Capability 2: ```localhost:3000/roomStayList ```
 * Done by: Jason Jose

@@ -8,7 +8,7 @@ import styles from "../styles/roomStatus.module.scss"
 
 const roomStatus = () => {
 
-    const rooms = [{id: 101, type: "DQ", status: 0}, {id: 102, type: "K", status: 1}, {id: 103, type: "DQK", status: 2}, {id: 104, type: "S", status: 3}]
+    const rooms = [{id: 101, type: "DQ", status: 0}, {id: 102, type: "K", status: 1}, {id: 103, type: "DQK", status: 2}, {id: 104, type: "S", status: 3}, {id: 105, type: "S", status: 3}, {id: 106, type: "S", status: 3}, {id: 107, type: "S", status: 3}, {id: 108, type: "S", status: 3}]
 
     return (
         <Layout>

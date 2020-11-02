@@ -14,9 +14,9 @@ export default function Layout({ children }) {
     <div className={styles.root}>
       <AppBar position="static">
         <Toolbar>
-          <IconButton edge="start" className={styles.menuButton} color="inherit" aria-label="menu">
+          {/* <IconButton edge="start" className={styles.menuButton} color="inherit" aria-label="menu">
             <MenuIcon />
-          </IconButton>
+          </IconButton> */}
           <Typography variant="h6" className={styles.title}>
             NO-CAP 🧢 HOTEL
           </Typography>
