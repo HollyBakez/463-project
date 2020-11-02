@@ -18,7 +18,7 @@ export default function Layout({ children }) {
             <MenuIcon />
           </IconButton> */}
           <Typography variant="h6" className={styles.title}>
-            NO-CAP 🧢 HOTEL
+            HotelX
           </Typography>
           <Button color="inherit">Login</Button>
         </Toolbar>

@@ -7,7 +7,7 @@ export default function Copyright() {
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
       <MuiLink color="inherit" href="https://brianchung.co/">
-        Example Hotel Company Inc
+        HotelX Inc
       </MuiLink>{' '}
       {new Date().getFullYear()}
       {'.'}
