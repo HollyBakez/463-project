@@ -14,7 +14,7 @@ export default function Index() {
           <Typography variant="h4" component="h1" gutterBottom>
             Hotel System
           </Typography>
-          <Link href="/roomStatus" color="secondary">
+          <Link href="/roomstatus" color="secondary">
             Go to the room status page
           </Link>
           <br />
