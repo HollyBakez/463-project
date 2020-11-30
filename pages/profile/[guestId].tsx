@@ -1,13 +1,35 @@
 import React, { useState } from "react";
-import Layout from "../src/Layout";
-import styles from "../styles/profile.module.scss";
+import Layout from "../../src/Layout";
+import styles from "../../styles/profile.module.scss";
 import Button from "@material-ui/core/Button";
 import Modal from "@material-ui/core/Modal";
 import TextField from "@material-ui/core/TextField";
 import { useRouter } from "next/router";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
+import { gql, useQuery } from "@apollo/client";
+import apolloClient from "../../src/apolloClient";
 
-export default function Profile() {
+const UPDATE_PROFILE = gql``;
+const GET_PROFILE = gql`
+  query MyQuery($guestId: uuid!) {
+    guests_by_pk(guestId: $guestId) {
+      Email
+      city
+      guestId
+      firstName
+      lastName
+      licenseId
+      phoneNum
+      profileImage
+      state
+      streetAddress
+      vehicleLicensePlate
+      zipCode
+    }
+  }
+`;
+
+function Profile() {
   const [fName, setFName] = useState(null);
   const [lName, setLName] = useState(null);
   const [address, setAddress] = useState(null);
@@ -15,16 +37,6 @@ export default function Profile() {
   const [phoneNum, setPhoneNum] = useState(null);
   const [idInfo, setIdInfo] = useState(null);
   const [vehicleID, setVehicleID] = useState(null);
-
-  //placeholder info to fill in with info from the db, where Lb means label
-  var profilePicSrc = "/assets/avatar.png";
-  var firstNameLb = "Leo";
-  var lastNameLb = "Di-Capio";
-  var addressLb = "12345 Jay Gatsby's House Way";
-  var emailLb = "realjaygatsby@hotmail.com";
-  var phoneLb = "626-123-4456";
-  var idLb = "CA, L1234562";
-  var licensePlateLb = "6TRJ244";
 
   const submitHandler = (event) => {
     event.stopPropagation();
@@ -55,6 +67,15 @@ export default function Profile() {
       setVehicleID(event.target.value);
     }
   };
+
+  const router = useRouter();
+
+  const { guestId } = router.query;
+
+  const { loading, error, data, fetchMore } = useQuery(GET_PROFILE, {
+    variables: { guestId },
+  });
+
   function rand() {
     return Math.round(Math.random() * 20) - 10;
   }
@@ -163,51 +184,70 @@ export default function Profile() {
       <div className={styles.header}>
         <h1> Profile Page</h1>
       </div>
-
-      <div className={styles.center}>
-        <div className={styles.avatar}>
-          <img src={profilePicSrc} alt="Leo" />
+      {data && (
+        <div className={styles.center}>
+          <div className={styles.avatar}>
+            <img
+              src={
+                data.guests_by_pk.profileImage
+                  ? data.guests_by_pk.profileImage
+                  : "/assets/default-user.png"
+              }
+              alt="Profile Picture"
+            />
+          </div>
+          <div className={styles.centertext}>
+            <h3>
+              First Name:{" "}
+              <div className={styles.fields}>{data.guests_by_pk.firstName}</div>
+            </h3>
+            <h3>
+              Last Name:{" "}
+              <div className={styles.fields}>{data.guests_by_pk.lastName}</div>
+            </h3>
+            <h3>
+              Address:{" "}
+              <div
+                className={styles.fields}
+              >{`${data.guests_by_pk.streetAddress} ${data.guests_by_pk.state}, ${data.guests_by_pk.zipCode}`}</div>
+            </h3>
+            <h3>
+              E-Mail:{" "}
+              <div className={styles.fields}>{data.guests_by_pk.Email}</div>
+            </h3>
+            <h3>
+              Phone:{" "}
+              <div className={styles.fields}>{data.guests_by_pk.phoneNum}</div>
+            </h3>
+            <h3>
+              ID Info:{" "}
+              <div className={styles.fields}>{data.guests_by_pk.licenseId}</div>
+            </h3>
+            <h3>
+              Vehicle License Plate:{" "}
+              <div className={styles.fields}>
+                {data.guests_by_pk.vehicleLicensePlate}
+              </div>
+            </h3>
+            <Button variant="contained" color="primary" onClick={handleOpen}>
+              Edit Profile
+            </Button>
+            <Modal
+              open={open}
+              onClose={handleClose}
+              aria-labelledby="simple-modal-title"
+              aria-describedby="simple-modal-description"
+            >
+              {body}
+            </Modal>
+          </div>
         </div>
-        <div className={styles.centertext}>
-          <h3>
-            First Name: <div className={styles.fields}>{firstNameLb}</div>
-          </h3>
-          <h3>
-            Last Name: <div className={styles.fields}>{lastNameLb}</div>
-          </h3>
-          <h3>
-            Address: <div className={styles.fields}>{addressLb}</div>
-          </h3>
-          <h3>
-            E-Mail: <div className={styles.fields}>{emailLb}</div>
-          </h3>
-          <h3>
-            Phone: <div className={styles.fields}>{phoneLb}</div>
-          </h3>
-          <h3>
-            ID Info: <div className={styles.fields}>{idLb}</div>
-          </h3>
-          <h3>
-            Vehicle License Plate:{" "}
-            <div className={styles.fields}>{licensePlateLb}</div>
-          </h3>
-
-          <Button variant="contained" color="primary" onClick={handleOpen}>
-            Edit Profile
-          </Button>
-          <Modal
-            open={open}
-            onClose={handleClose}
-            aria-labelledby="simple-modal-title"
-            aria-describedby="simple-modal-description"
-          >
-            {body}
-          </Modal>
-        </div>
-      </div>
+      )}
     </Layout>
   );
 }
+
+export default apolloClient({ ssr: true })(Profile);
 
 /*
 

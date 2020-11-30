@@ -3,8 +3,9 @@ import Grid from "@material-ui/core/Grid";
 import Layout from "../src/Layout";
 import RoomReservationCard from "../src/components/RoomReservationCard";
 import styles from "../styles/reservations.module.scss";
-
-// [NEEDS REFACTOR]
+import Button from "@material-ui/core/Button";
+import Modal from "@material-ui/core/Modal";
+import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 
 const reservations = () => {
   // array of reservation info objects
@@ -38,6 +39,9 @@ const reservations = () => {
   return (
     <Layout>
       <main className={styles.root}>
+        <Button variant="contained" color="primary">
+          Add Reservation
+        </Button>
         {reservationInfo.map((value) => (
           <Grid
             container

@@ -6,7 +6,8 @@ import FormControl from "@material-ui/core/FormControl";
 import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
-
+import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/MenuItem";
 // Gets the housekeeping status (towels, bathroom, etc..) of a GIVEN room
 
 export default function RoomStayList() {
@@ -14,9 +15,9 @@ export default function RoomStayList() {
   const roomsHouseKeeping = [
     {
       roomNum: 101,
-      houseKeeper: "bobaloo",
+      houseKeeper: "Bubbaloo",
       type: "DQ",
-      status: "Clean",
+      status: "available",
       houseKeepingStatuses: {
         bathroom: true,
         towels: false,
@@ -30,7 +31,21 @@ export default function RoomStayList() {
       roomNum: 102,
       houseKeeper: "Chief Loober",
       type: "K",
-      status: "Clean",
+      status: "unavailable",
+      houseKeepingStatuses: {
+        bathroom: true,
+        towels: false,
+        bedSheets: false,
+        vacuum: false,
+        dusting: false,
+        electronics: false,
+      },
+    },
+    {
+      roomNum: 103,
+      houseKeeper: "Gooby Gober",
+      type: "K",
+      status: "occupied",
       houseKeepingStatuses: {
         bathroom: true,
         towels: false,
@@ -43,19 +58,20 @@ export default function RoomStayList() {
   ];
 
   // [TODO]: Needs connection to sqldatabase to update checkboxes statuses directly
-  const handleChange = (event, roomNum) => {
-    // The roomNum, the housekeeping status we want to update, the value we want to set it too
-    console.log(
-      "will send request for id",
-      "\nroom Number Id: ",
-      roomNum,
-      "\nhouse Keeping Status: ",
-      event.target.name,
-      "\nCheckbox Value Status: ",
-      event.target.checked
-    );
+  const handleChange = (event, formElement, roomNum) => {
+    if (formElement === "checkbox") {
+      // The roomNum, the housekeeping status we want to update, the value we want to set it too
+      console.log("will send request for id");
+      console.log("room Number Id: ", roomNum);
+      console.log("house Keeping Status: ", event.target.name);
+      console.log("Checkbox Value Status: ", event.target.checked);
 
-    // TODO: Use the 3 parameters above to update the SQL database
+      // TODO: Use the 3 parameters above to update the SQL database
+    } else if (formElement === "dropDown") {
+      // The roomNum, the room status value we want to change it to
+      console.log("room Number Id: ", roomNum);
+      console.log("Dropdown selected option: ", event.target.value);
+    }
   };
 
   return (
@@ -107,13 +123,29 @@ export default function RoomStayList() {
                 <span> {value.type}</span>
               </td>
               <td>
-                <span> {value.status}</span>
+                <FormControl>
+                  <Select
+                    id="dropDownMenu"
+                    value={value.status}
+                    onChange={(event) =>
+                      handleChange(event, "dropDown", value.roomNum)
+                    }
+                    displayEmpty
+                  >
+                    <MenuItem value="available"> Available </MenuItem>
+                    <MenuItem value="unavailable"> Unavailable </MenuItem>
+                    <MenuItem value="occupied"> Occupied </MenuItem>
+                    <MenuItem value="dirty"> Dirty </MenuItem>
+                  </Select>
+                </FormControl>
               </td>
               <td>
                 <FormControl component="fieldset">
                   <FormGroup>
                     <Checkbox
-                      onChange={(event) => handleChange(event, value.roomNum)}
+                      onChange={(event) =>
+                        handleChange(event, "checkbox", value.roomNum)
+                      }
                       name="bathroom"
                     />
                   </FormGroup>
@@ -123,7 +155,9 @@ export default function RoomStayList() {
                 <FormControl component="fieldset">
                   <FormGroup>
                     <Checkbox
-                      onChange={(event) => handleChange(event, value.roomNum)}
+                      onChange={(event) =>
+                        handleChange(event, "checkbox", value.roomNum)
+                      }
                       name="towels"
                     />
                   </FormGroup>
@@ -133,7 +167,9 @@ export default function RoomStayList() {
                 <FormControl component="fieldset">
                   <FormGroup>
                     <Checkbox
-                      onChange={(event) => handleChange(event, value.roomNum)}
+                      onChange={(event) =>
+                        handleChange(event, "checkbox", value.roomNum)
+                      }
                       name="bedSheets"
                     />
                   </FormGroup>
@@ -143,7 +179,9 @@ export default function RoomStayList() {
                 <FormControl component="fieldset">
                   <FormGroup>
                     <Checkbox
-                      onChange={(event) => handleChange(event, value.roomNum)}
+                      onChange={(event) =>
+                        handleChange(event, "checkbox", value.roomNum)
+                      }
                       name="vacuum"
                     />
                   </FormGroup>
@@ -153,7 +191,9 @@ export default function RoomStayList() {
                 <FormControl component="fieldset">
                   <FormGroup>
                     <Checkbox
-                      onChange={(event) => handleChange(event, value.roomNum)}
+                      onChange={(event) =>
+                        handleChange(event, "checkbox", value.roomNum)
+                      }
                       name="dusting"
                     />
                   </FormGroup>
@@ -163,7 +203,9 @@ export default function RoomStayList() {
                 <FormControl component="fieldset">
                   <FormGroup>
                     <Checkbox
-                      onChange={(event) => handleChange(event, value.roomNum)}
+                      onChange={(event) =>
+                        handleChange(event, "checkbox", value.roomNum)
+                      }
                       name="electronics"
                     />
                   </FormGroup>

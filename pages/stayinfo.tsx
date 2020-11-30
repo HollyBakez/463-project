@@ -2,7 +2,8 @@ import React from "react";
 import Layout from "../src/Layout";
 import styles from "../styles/profile.module.scss";
 import Card from "@material-ui/core/Card";
-
+import Button from "@material-ui/core/Button";
+import TextField from "@material-ui/core/TextField";
 // Capability 6
 
 export default function StayInfo() {
@@ -33,17 +34,16 @@ export default function StayInfo() {
           <div className={styles.centertext}>
             <h1>
               Guest Name: <div className={styles.fields}>{info.guestName}</div>
-            </h1>
+            </h1>{" "}
             <h3>
               Check-In Date:{" "}
               <div className={styles.fields}>{info.checkInDate}</div>
             </h3>
             <h3>
-              Check-In Time:{" "}
               <div className={styles.fields}>{info.checkInTime}</div>
             </h3>
             <h3>
-              Expected Check-Out Date:{" "}
+              <h3>Expected Check-Out Date: </h3>
               <div className={styles.fields}>{info.expCheckOutDate}</div>
             </h3>
             <h3>
@@ -72,6 +72,9 @@ export default function StayInfo() {
             <h3>
               Balance: <div className={styles.fields}>{info.balance}</div>
             </h3>
+            <Button variant="contained" color="primary">
+              Check-In type=""suibbmit type="submit"
+            </Button>
           </div>
         </Card>
       </div>
