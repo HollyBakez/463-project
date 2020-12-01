@@ -22,7 +22,7 @@ export default function Layout({ children }) {
               {"HotelX"}
             </Link>
           </Typography>
-          <Button color="inherit">Click Me 🧢</Button>
+          <Button color="inherit">Login</Button>
         </Toolbar>
       </AppBar>
       {children}

@@ -1,23 +1,7 @@
 .btnGroup {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 24px;
-  margin-bottom: 64px;
-}
-
-.roomButton {
-  button {
-    background: transparent;
-    border: none !important;
-    font-size: 0;
-  }
-}
-
-.modalContainer {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 24px;
+    margin-bottom: 64px;
 }
