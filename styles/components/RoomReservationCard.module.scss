@@ -1,45 +1,50 @@
 .root {
-    min-width: 600px;
+  min-width: 600px;
+  padding-top: 30px;
 }
 
 .dateFields {
-    display: flex;
-    flex-direction: row;
+  display: flex;
+  flex-direction: row;
 }
 
 .dateField {
-    padding-left: 24px;
-    padding-bottom: 18px;;
+  padding-left: 24px;
+  padding-bottom: 18px;
 }
 
 .topSection {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 
 .bottomHalf {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 
 .textField {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 
-.textFieldValue{
-    width: 60px;
-    text-align: right;
+.textFieldValue {
+  width: 60px;
+  text-align: right;
 }
 
-.webReservationField{
-    display: flex;
-    flex-direction: row;
+.webReservationField {
+  display: flex;
+  flex-direction: row;
 }
 
-.webReservationURLField{
-    padding-left: 12px;
+.webReservationURLField {
+  padding-left: 12px;
+}
+.Button {
+  display: flex;
+  justify-content: center;
 }
