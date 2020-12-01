@@ -16,11 +16,13 @@ import styles from "../styles/roomStayList.module.scss";
 import DayColumn from "../src/components/DayColumn";
 import { gql, useQuery } from "@apollo/client";
 import apolloClient from "../src/apolloClient";
-import { addDays } from "date-fns";
+import { addDays, format } from "date-fns";
 
 var days = Array.from({ length: 7 }, (_, i) =>
   addDays(new Date(), i).toISOString()
 );
+
+days[0] = "10/23/20";
 
 const GET_RESERVATION_BY_DATE = gql`
   query GetReservationsByDate($currDate: date!) {
@@ -41,6 +43,7 @@ const GET_RESERVATION_BY_DATE = gql`
         firstName
         lastName
       }
+      reservationId
     }
   }
 `;
@@ -123,10 +126,10 @@ function RoomStayList() {
     <Layout>
       <h1 className={styles.header}> Room Stay List </h1>
       <Grid container justify="center" spacing={4}>
-        {rooms.map((value) => (
-          <Grid item>
-            <DayColumn roomOccupyList={value.roomOccupyList}>
-              {value.date}
+        {days.map((day) => (
+          <Grid item key={day}>
+            <DayColumn roomOccupyList={result[day].data}>
+              {format(new Date(day), "LLLL do")}
             </DayColumn>
           </Grid>
         ))}
