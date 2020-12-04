@@ -1,13 +1,6 @@
 import React from "react";
-import ProTip from "../src/ProTip";
-import Link from "../src/Link";
-import Copyright from "../src/Copyright";
 // Layout
 import Layout from "../src/Layout";
-// Material UI Stuff
-import Container from "@material-ui/core/Container";
-import Typography from "@material-ui/core/Typography";
-import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import styles from "../styles/dailyreport.module.scss";
 import { gql, useQuery } from "@apollo/client";
@@ -61,6 +54,9 @@ function DailyReport() {
     <Layout>
       <div className={styles.header}>
         <h1>Daily Report</h1>
+        <Button href="/" size="large" variant="contained" color="primary">
+          Return to Main Menu
+        </Button>
       </div>
       {data && (
         <div>
@@ -114,9 +110,6 @@ function DailyReport() {
           </h2>
         </div>
       )}
-      <Button href="/" size="large" variant="contained" color="primary">
-        Return to Main Menu
-      </Button>
     </Layout>
   );
 }

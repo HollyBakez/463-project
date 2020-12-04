@@ -1,53 +1,41 @@
-import React from 'react';
-import Container from '@material-ui/core/Container';
-import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
-import Layout from '../src/Layout';
-import Link from '../src/Link';
-import Copyright from '../src/Copyright';
+import React from "react";
+import Typography from "@material-ui/core/Typography";
+import Layout from "../src/Layout";
+import Copyright from "../src/Copyright";
+import styles from "../styles/index.module.scss";
+import { withStyles } from "@material-ui/core/styles";
 
 export default function Index() {
+  const CustomTypography = withStyles({
+    root: {
+      color: "#2C365E",
+    },
+  })(Typography);
+
+  const CustomTypography2 = withStyles({
+    root: {
+      color: "#449DD1",
+    },
+  })(Typography);
   return (
     <Layout>
-      <Container maxWidth="sm">
-        <Box my={4}>
-          <Typography variant="h4" component="h1" gutterBottom>
+      <div className={styles.flexContainer}>
+        <div className={styles.column}>
+          <CustomTypography2 variant="h3" gutterBottom>
             Hotel System
-          </Typography>
-          <Link href="/roomstatus" color="secondary">
-            Go to the room status page
-          </Link>
-          <br />
-          <Link href="/roomStayList" color="secondary">
-            Go to the room stay list page
-          </Link>
-          <br />
-          <Link href="/reservations" color="secondary">
-            Go to the reservations page
-          </Link>
-          <br />
-          <Link href="/housekeeping" color="secondary">
-            Go to the house keeping page
-          </Link>
-          <br />
-          <Link href="/profile" color="secondary">
-            Go to the profile page
-          </Link>
-          <br />
-          <Link href="/stayinfo" color="secondary">
-            Go to the stay info page
-          </Link>
-          <br />
-          <Link href="/search" color="secondary">
-            Go to the search page
-          </Link>
-          <br />
-          <Link href="/dailyreport" color="secondary">
-            Go to the daily report page
-          </Link>
-          <Copyright />
-        </Box>
-      </Container>
+          </CustomTypography2>
+          <i>
+            <CustomTypography variant="h5" gutterBottom>
+              Simple...Elegant...Bold...Hat 🧢
+            </CustomTypography>
+          </i>
+        </div>
+        <div className={styles.column}>
+          <img src="/assets/hero-banner.png" />
+        </div>
+      </div>
+
+      <Copyright />
     </Layout>
   );
 }

@@ -1,11 +1,10 @@
 import React from "react";
-import { roomType } from "../models/room";
 import styles from "../../styles/components/DayColumn.module.scss";
 import Link from "../Link";
+import { isToday } from "date-fns";
+import { roomNumArr } from "../models/room";
 
-const rooms = [101, 102, 103, 104, 105];
-
-const DayColumn = ({ roomOccupyList, children }) => {
+const DayColumn = ({ roomOccupyList, day, children }) => {
   // Assuming roomOccupyList = [{roomNum, roomStatus, guestName},{roomNum, roomStatus, guestName}]
 
   const getRoom = (roomNum: string) => {
@@ -18,7 +17,7 @@ const DayColumn = ({ roomOccupyList, children }) => {
   return (
     <div>
       <h1>{children}</h1>
-      {rooms.map((room) => {
+      {roomNumArr.map((room) => {
         const currentRoom = getRoom(room.toString());
         return (
           <div className={styles.roomContainer} key={room}>
@@ -26,7 +25,9 @@ const DayColumn = ({ roomOccupyList, children }) => {
               href={
                 currentRoom
                   ? `/stayinfo/${currentRoom.reservationId}`
-                  : `/stayinfo/newCheckIn`
+                  : isToday(new Date(day))
+                  ? `/stayinfo/newCheckIn`
+                  : `/reservations?newRes=true`
               }
             >
               {room}

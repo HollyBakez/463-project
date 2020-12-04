@@ -4,6 +4,7 @@ import Card from "@material-ui/core/Card";
 import Typography from "@material-ui/core/Typography";
 import styles from "../../styles/components/RoomReservationCard.module.scss";
 import Button from "@material-ui/core/Button";
+import { useRouter } from "next/router";
 
 const RoomReservationCard = ({
   roomNum,
@@ -16,11 +17,31 @@ const RoomReservationCard = ({
   website,
   children,
   handleDelete,
+  reservationId,
+  status,
 }) => {
+  const router = useRouter();
+
+  const handleReservationClick = (event) => {
+    router.push({
+      pathname: "/stayinfo/[reservationId]",
+      query: {
+        reservationId,
+      },
+    });
+  };
+
   return (
-    <Card className={styles.root}>
+    <Card
+      className={styles.root}
+      onClick={handleReservationClick}
+      style={{ backgroundColor: status === 3 ? "yellow" : null }}
+    >
       <CardContent>
         <div className={styles.topSection}>
+          {status === 3 && (
+            <div className={styles.maintenanceIcon}>Under Maintenance!</div>
+          )}
           <Typography variant="h5" component="h3">
             {roomNum}
           </Typography>

@@ -8,15 +8,16 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Modal from "@material-ui/core/Modal";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
-import { gql, useLazyQuery, useMutation, useQuery } from "@apollo/client";
+import { gql, useMutation, useQuery } from "@apollo/client";
 import { differenceInDays, format } from "date-fns";
 import apolloClient from "../src/apolloClient";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import InputLabel from "@material-ui/core/InputLabel";
+import { useRouter } from "next/router";
+import { roomNumArr } from "../src/models/room";
 
 const currDate = new Date().toISOString();
-const roomNumArr = [101, 102, 103, 104, 105, 201, 202, 203, 204, 205];
 
 const CREATE_RESERVATION = gql`
   mutation InsertReservation(
@@ -89,6 +90,7 @@ const GET_RESERVATIONS = gql`
       room {
         type
         roomNum
+        status
       }
       rate
       website
@@ -102,6 +104,9 @@ const GET_RESERVATIONS = gql`
 `;
 
 const reservations = () => {
+  const router = useRouter();
+  const { newRes } = router.query;
+
   const [fName, setFName] = useState(null);
   const [lName, setLName] = useState(null);
   const [dateMade, setDateMade] = useState(null);
@@ -144,6 +149,12 @@ const reservations = () => {
     console.error(error);
   }
 
+  useEffect(() => {
+    if (newRes) {
+      handleOpen();
+    }
+  }, []);
+
   // Guest First Name, Guest Last Name, Date Made, Date Checkin, Date Checkout, Room Type, ROOM NUMBER, Website Reserved, Rate ($/Day)
 
   function rand() {
@@ -161,9 +172,9 @@ const reservations = () => {
     };
   }
 
-  const deleteReservationHandler = (reservationId: string): void => {
+  const deleteReservationHandler = (event, reservationId: string): void => {
+    event.stopPropagation();
     deleteReservation({ variables: { reservationId } });
-    return console.log("im in the parent mofo", reservationId);
   };
 
   const handleChange = (event) => {
@@ -360,6 +371,8 @@ const reservations = () => {
                   dateCheckOut={value.dateCheckOut}
                   roomType={value.room.type}
                   rate={value.rate}
+                  reservationId={value.reservationId}
+                  status={value.room.status}
                   totalCharge={
                     value.rate *
                     differenceInDays(
@@ -368,8 +381,8 @@ const reservations = () => {
                     )
                   }
                   website={value.website}
-                  handleDelete={() =>
-                    deleteReservationHandler(value.reservationId)
+                  handleDelete={(event) =>
+                    deleteReservationHandler(event, value.reservationId)
                   }
                 >
                   {`${value.guest.firstName} ${value.guest.lastName}`}

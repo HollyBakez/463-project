@@ -3,11 +3,108 @@ import Layout from "../../src/Layout";
 import styles from "../../styles/stayinfo.module.scss";
 import Card from "@material-ui/core/Card";
 import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
 import { useRouter } from "next/router";
-import { gql, useQuery } from "@apollo/client";
+import { gql, useMutation, useQuery } from "@apollo/client";
 import apolloClient from "../../src/apolloClient";
+import { differenceInDays, format } from "date-fns";
+import Link from "../../src/Link";
+import { KeyboardDateTimePicker } from "@material-ui/pickers";
+import { roomNumArr } from "../../src/models/room";
 // Capability 6
+
+const currDate = new Date().toISOString();
+
+const UPDATE_RESERVATION = gql`
+  mutation UpdateReservation(
+    $reservationId: uuid!
+    $dateCheckIn: date!
+    $dateCheckOut: date!
+    $checkInTime: timetz!
+    $checkOutTime: timetz!
+    $roomNum: String!
+    $rate: numeric!
+    $amountPaid: numeric
+  ) {
+    update_reservations_by_pk(
+      pk_columns: { reservationId: $reservationId }
+      _set: {
+        checkInTime: $checkInTime
+        checkOutTime: $checkOutTime
+        dateCheckIn: $dateCheckIn
+        dateCheckOut: $dateCheckOut
+        roomNum: $roomNum
+        rate: $rate
+        amountPaid: $amountPaid
+      }
+    ) {
+      guestId
+      reservationId
+    }
+  }
+`;
+
+const RESERVATION_CHECK_IN = gql`
+  mutation MyMutation($reservationId: uuid!, $checkedIn: Boolean!) {
+    update_reservations_by_pk(
+      pk_columns: { reservationId: $reservationId }
+      _set: { checkedIn: $checkedIn }
+    ) {
+      checkedIn
+    }
+  }
+`;
+
+const CHANGE_ROOM_STATUS = gql`
+  mutation MyMutation($roomNum: String!, $status: numeric!, $clean: Boolean!) {
+    update_rooms_by_pk(
+      pk_columns: { roomNum: $roomNum }
+      _set: {
+        status: $status
+        bathroom: $clean
+        bedsheets: $clean
+        dusting: $clean
+        electronics: $clean
+        vacuum: $clean
+        towels: $clean
+      }
+    ) {
+      status
+    }
+  }
+`;
+
+const INSERT_RESERVATION = gql`
+  mutation InsertReservation(
+    $roomNum: String!
+    $dateMade: date!
+    $dateCheckOut: date!
+    $dateCheckIn: date!
+    $checkOutTime: timetz!
+    $checkInTime: timetz!
+    $lastName: String!
+    $firstName: String!
+    $rate: numeric!
+    $amountPaid: numeric!
+  ) {
+    insert_reservations_one(
+      object: {
+        roomNum: $roomNum
+        checkInTime: $checkInTime
+        checkOutTime: $checkOutTime
+        dateCheckIn: $dateCheckIn
+        dateCheckOut: $dateCheckOut
+        dateMade: $dateMade
+        guest: { data: { firstName: $firstName, lastName: $lastName } }
+        rate: $rate
+        checkedIn: true
+        amountPaid: $amountPaid
+      }
+    ) {
+      reservationId
+      guestId
+    }
+  }
+`;
 
 const GET_RESERVATION_BY_PK = gql`
   query ReservationQuery($reservationId: uuid!) {
@@ -16,6 +113,8 @@ const GET_RESERVATION_BY_PK = gql`
       checkedIn
       dateCheckIn
       dateCheckOut
+      checkInTime
+      checkOutTime
       room {
         roomNum
         type
@@ -25,80 +124,133 @@ const GET_RESERVATION_BY_PK = gql`
         firstName
         guestId
         lastName
+        profileImage
       }
+      guestId
     }
   }
 `;
 
 function StayInfo() {
-  const [fName, setFName] = useState(null);
-  const [lName, setLName] = useState(null);
-  const [dateCheckIn, setDateCheckIn] = useState(null);
-  const [checkInTime, setCheckInTime] = useState(null);
-  const [dateCheckOut, setDateCheckOut] = useState(null);
-  const [checkOutTime, setCheckOutTime] = useState(null);
-  const [roomType, setRoomType] = useState(null);
-  const [roomNum, setRoomNum] = useState(null);
+  const [firstName, setFirstName] = useState(null);
+  const [lastName, setLastName] = useState(null);
+  const [checkInTime, setCheckInTime] = useState(new Date());
+  const [checkOutTime, setCheckOutTime] = useState(new Date());
+  const [roomNum, setRoomNum] = useState("101");
   const [rate, setRate] = useState(null);
-  const [totalCharge, setTotalCharge] = useState(null);
-  const [paymentMade, setPaymentMade] = useState(null);
+  const [paymentMade, setPaymentMade] = useState(0);
 
   const router = useRouter();
 
   const { reservationId } = router.query;
 
-  console.log(reservationId);
+  let data, loading, error, fetchMore;
+  if (reservationId !== "newCheckIn") {
+    ({ loading, error, data, fetchMore } = useQuery(GET_RESERVATION_BY_PK, {
+      variables: {
+        reservationId,
+      },
+      onCompleted: (data) => {
+        initForm(data);
+      },
+    }));
+  }
 
-  const { loading, error, data, fetchMore } = useQuery(GET_RESERVATION_BY_PK, {
+  const [updateReservation] = useMutation(UPDATE_RESERVATION, {
     variables: {
       reservationId,
+      dateCheckIn: checkInTime.toISOString(),
+      dateCheckOut: checkOutTime.toISOString(),
+      checkInTime: format(checkInTime, "HH:mm:XXX"),
+      checkOutTime: format(checkOutTime, "HH:mm:XXX"),
+      roomNum,
+      rate,
+      amountPaid: paymentMade,
+    },
+    refetchQueries: [
+      { query: GET_RESERVATION_BY_PK, variables: { reservationId } },
+    ],
+  });
+
+  const [insertReservation] = useMutation(INSERT_RESERVATION, {
+    variables: {
+      firstName,
+      lastName,
+      dateCheckIn: checkInTime.toISOString(),
+      dateCheckOut: checkOutTime.toISOString(),
+      checkInTime: format(checkInTime, "HH:mm:XXX"),
+      checkOutTime: format(checkOutTime, "HH:mm:XXX"),
+      roomNum,
+      rate,
+      amountPaid: paymentMade,
+      dateMade: currDate,
+    },
+    onCompleted: ({ insert_reservations_one }) => {
+      redirectToStayInfo(insert_reservations_one);
     },
   });
 
-  console.log(data);
+  const redirectToStayInfo = async (val) => {
+    window.location.replace(`/stayinfo/${val.reservationId}`);
+  };
+
+  const [changeRoomStatus] = useMutation(CHANGE_ROOM_STATUS);
+
+  const [reservationCheckIn] = useMutation(RESERVATION_CHECK_IN, {
+    refetchQueries: [
+      { query: GET_RESERVATION_BY_PK, variables: { reservationId } },
+    ],
+  });
+
+  const initForm = (data) => {
+    setCheckInTime(
+      new Date(
+        Date.parse(
+          data.reservations_by_pk.checkInTime
+            ? `${data.reservations_by_pk.dateCheckIn} ${data.reservations_by_pk.checkInTime}`
+            : data.reservations_by_pk.dateCheckIn
+        )
+      ) || new Date()
+    );
+    setCheckOutTime(
+      new Date(
+        Date.parse(
+          data.reservations_by_pk.checkOutTime
+            ? `${data.reservations_by_pk.dateCheckOut} ${data.reservations_by_pk.checkOutTime}`
+            : data.reservations_by_pk.dateCheckOut
+        )
+      ) || new Date()
+    );
+    setRoomNum(data.reservations_by_pk.room.roomNum || "");
+    setRate(data.reservations_by_pk.rate || "");
+    setPaymentMade(data.reservations_by_pk.amountPaid || 0);
+  };
+
+  const handleCheckIn = (checkedIn: boolean, roomNum: string) => {
+    reservationCheckIn({ variables: { reservationId, checkedIn: !checkedIn } });
+    changeRoomStatus({
+      variables: { roomNum, status: checkedIn ? 2 : 1, clean: !checkedIn },
+    });
+  };
+
+  const handleNewCheckIn = (event) => {
+    insertReservation();
+  };
 
   const handleChange = (event) => {
     // if to find
-    if (event.target.name === "guestFname") {
-      setFName(event.target.value);
-    } else if (event.target.name === "guestLname") {
-      setLName(event.target.value);
-    } else if (event.target.name === "checkInDate") {
-      setDateCheckIn(event.target.value);
-    } else if (event.target.name === "checkInTime") {
-      setCheckInTime(event.target.value);
-    } else if (event.target.name === "expCheckOutDate") {
-      setDateCheckOut(event.target.value);
-    } else if (event.target.name === "expCheckOutTime") {
-      setCheckOutTime(event.target.value);
-    } else if (event.target.name === "roomType") {
-      setRoomType(event.target.value);
+    if (event.target.name === "firstName") {
+      setFirstName(event.target.value);
+    } else if (event.target.name === "lastName") {
+      setLastName(event.target.value);
     } else if (event.target.name === "roomRate") {
       setRate(event.target.value);
-    } else if (event.target.name === "roomNumber") {
+    } else if (event.target.name === "roomnum") {
       setRoomNum(event.target.value);
-    } else if (event.target.name === "totalCharge") {
-      setTotalCharge(event.target.value);
     } else if (event.target.name === "paymentMade") {
       setPaymentMade(event.target.value);
     } else {
-      console.error("you messed up somewhere");
     }
-  };
-
-  const info = {
-    guestFname: "Leonardo",
-    guestLname: "Di-CAP",
-    checkInDate: "10/31/20",
-    checkInTime: "10:00 AM",
-    expCheckOutDate: "11/05/20",
-    expCheckOutTime: "11:00 AM",
-    roomType: "DQ",
-    roomNumber: "101",
-    roomRate: "$50.00",
-    totalCharge: "$250.00",
-    paymentMade: "$100.00",
-    balance: "$150.00",
   };
 
   return (
@@ -107,110 +259,97 @@ function StayInfo() {
         <h1>Stay Info</h1>
       </div>
       <div style={{ display: "flex", justifyContent: "center" }}>
-        {data && (
+        {(data || reservationId === "newCheckIn") && (
           <Card style={{ width: 700 }}>
             <div className={styles.avatar}>
-              <img src="/assets/avatar.png" alt="Leo" />
+              <img src="/assets/default-user.png" alt="Leo" />
             </div>
             <div className={styles.centertext}>
+              {reservationId !== "newCheckIn" && (
+                <Link href={`/profile/${data.reservations_by_pk.guestId}`}>
+                  <h2>{`${data.reservations_by_pk.guest.firstName} ${data.reservations_by_pk.guest.lastName}`}</h2>
+                </Link>
+              )}
+              {reservationId === "newCheckIn" && (
+                <div>
+                  <h2>New Guest</h2>{" "}
+                  <label className={styles.fields}>
+                    First Name:{" "}
+                    <input
+                      name="firstName"
+                      value={firstName}
+                      onChange={handleChange}
+                    ></input>
+                  </label>
+                  <label className={styles.fields}>
+                    Last Name:
+                    <input
+                      name="lastName"
+                      value={lastName}
+                      onChange={handleChange}
+                    ></input>
+                  </label>
+                </div>
+              )}
+              <KeyboardDateTimePicker
+                variant="inline"
+                ampm={false}
+                label="Check-In Time"
+                value={checkInTime}
+                onChange={setCheckInTime}
+                onError={console.log}
+                format="yyyy/MM/dd HH:mm"
+              />
+              <KeyboardDateTimePicker
+                variant="inline"
+                ampm={false}
+                label="Check-In Time"
+                value={checkOutTime}
+                onChange={setCheckOutTime}
+                onError={console.log}
+                format="yyyy/MM/dd HH:mm"
+              />
               <label className={styles.fields}>
-                Guest First Name:{" "}
-                <input
-                  name="guestFname"
-                  value={
-                    fName ? fName : data.reservations_by_pk.guest.firstName
-                  }
+                Room Number
+                <select
+                  name="roomnum"
+                  id="roomnum-label"
+                  value={roomNum ? roomNum : "101"}
                   onChange={handleChange}
-                ></input>
-              </label>{" "}
-              <label className={styles.fields}>
-                Guest Last Name:{" "}
-                <input
-                  name="guestLname"
-                  value={lName ? lName : data.reservations_by_pk.guest.lastName}
-                  onChange={handleChange}
-                ></input>
-              </label>{" "}
-              <label className={styles.fields}>
-                Check-In Date:{" "}
-                <input
-                  name="checkInDate"
-                  value={
-                    dateCheckIn
-                      ? dateCheckIn
-                      : data.reservations_by_pk.dateCheckIn
-                  }
-                  onChange={handleChange}
-                ></input>
+                >
+                  {roomNumArr.map((value, idx) => (
+                    <option value={value.toString()} key={idx}>
+                      {" "}
+                      {value}
+                    </option>
+                  ))}
+                </select>
               </label>
-              <label className={styles.fields}>
-                Check-In Time:
-                <input
-                  name="checkInTime"
-                  value={
-                    checkInTime
-                      ? checkInTime
-                      : data.reservations_by_pk.guest.checkInTime
-                  }
-                  onChange={handleChange}
-                ></input>
-              </label>
-              <label className={styles.fields}>
-                Expected Check-Out Date:
-                <input
-                  name="expCheckOutDate"
-                  value={
-                    dateCheckOut
-                      ? dateCheckOut
-                      : data.reservations_by_pk.dateCheckOut
-                  }
-                  onChange={handleChange}
-                ></input>
-              </label>
-              <label className={styles.fields}>
-                Expected Check-Out Time:{" "}
-                <input
-                  name="checkInTime"
-                  value={
-                    checkOutTime
-                      ? checkOutTime
-                      : data.reservations_by_pk.checkOutTime
-                  }
-                  onChange={handleChange}
-                ></input>
-              </label>
-              <label className={styles.fields}>
-                Room Type:{" "}
-                <input
-                  name="roomType"
-                  value={roomType ? roomType : data.reservations_by_pk.roomType}
-                  onChange={handleChange}
-                ></input>
-              </label>
-              <label className={styles.fields}>
-                Room Number:{" "}
-                <input
-                  name="roomNumber"
-                  value={roomNum ? roomNum : data.reservations_by_pk.roomNum}
-                  onChange={handleChange}
-                ></input>
-              </label>
+
+              {reservationId !== "newCheckIn" && (
+                <label className={styles.fields}>
+                  Room Type: <span>{data.reservations_by_pk.room.type}</span>
+                </label>
+              )}
               <label className={styles.fields}>
                 Room Rate ($/Day):{" "}
                 <input
                   name="roomRate"
-                  value={rate ? rate : data.reservations_by_pk.rate}
+                  value={rate}
                   onChange={handleChange}
                 ></input>
               </label>
               <label className={styles.fields}>
                 Total Charge:{" "}
                 <input
+                  readOnly
                   name="totalCharge"
                   value={
-                    totalCharge
-                      ? totalCharge
-                      : data.reservations_by_pk.totalCharge
+                    rate *
+                    differenceInDays(
+                      new Date(checkOutTime),
+                      new Date(checkInTime)
+                    )
                   }
                   onChange={handleChange}
                 ></input>
@@ -219,11 +358,7 @@ function StayInfo() {
                 Payments Made:{" "}
                 <input
                   name="paymentMade"
-                  value={
-                    paymentMade
-                      ? paymentMade
-                      : data.reservations_by_pk.paymentMade
-                  }
+                  value={paymentMade}
                   onChange={handleChange}
                 ></input>
               </label>
@@ -231,13 +366,66 @@ function StayInfo() {
                 Balance:{" "}
                 <input
                   name="balance"
-                  value={info.balance}
+                  value={
+                    rate *
+                      differenceInDays(
+                        new Date(checkOutTime),
+                        new Date(checkInTime)
+                      ) -
+                    paymentMade
+                  }
                   onChange={handleChange}
                 ></input>
               </label>
-              <Button variant="contained" color="primary">
-                Save Changes
-              </Button>
+              {reservationId !== "newCheckIn" && (
+                <div>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    disabled={
+                      !roomNum || !rate || !checkInTime || !checkOutTime
+                    }
+                    onClick={() => {
+                      updateReservation();
+                    }}
+                  >
+                    Save Changes
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    onClick={() => {
+                      handleCheckIn(
+                        data.reservations_by_pk.checkedIn,
+                        data.reservations_by_pk.room.roomNum
+                      );
+                    }}
+                  >
+                    {data.reservations_by_pk.checkedIn
+                      ? "Check Out"
+                      : "Check In"}
+                  </Button>
+                </div>
+              )}
+              {reservationId === "newCheckIn" && (
+                <div>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleNewCheckIn}
+                    disabled={
+                      !roomNum ||
+                      !rate ||
+                      !checkInTime ||
+                      !checkOutTime ||
+                      !firstName ||
+                      !lastName
+                    }
+                  >
+                    Check In
+                  </Button>
+                </div>
+              )}
             </div>
           </Card>
         )}
