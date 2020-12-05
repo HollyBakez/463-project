@@ -30,9 +30,9 @@ To access each of the capabilities, you must open these page urls:
 * Done by: Brian Chung
 ## Capability 4: ```localhost:3000/housekeeping ``` or ```https://goofy-kowalevski-f9d20a.netlify.app/housekeeping```
 * Done by: Jason Jose
-## Capability 5: ```localhost:3000/profile ``` or ```https://goofy-kowalevski-f9d20a.netlify.app/profile```
+## Capability 5: Accessed through Capability 6 or 7
 * Done by: Holland Ho
-## Capability 6: ```localhost:3000/stayinfo ``` or ```https://goofy-kowalevski-f9d20a.netlify.app/stayinfo```
+## Capability 6: Accessed through Capability 1, 2, or 3
 * Done by: Holland Ho
 ## Capability 7: ```localhost:3000/search ``` or ```https://goofy-kowalevski-f9d20a.netlify.app/search```
 * Done by: Kevin Liang
